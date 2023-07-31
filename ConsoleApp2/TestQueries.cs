@@ -136,8 +136,43 @@ public class TestQueries
         var filterDelete = Builders<BsonDocument>.Filter.Gte("OrderCount", 0);
         collection.DeleteMany(filterDelete);
     }
+    
+    public void WriteResultsToCSV(string filename, int[] sizes, string[] compressors, int numberOfQueries)
+    {
+        using (var writer = new StreamWriter(filename))
+        {
+            // Write headers
+            writer.WriteLine("Size,Compression,Query,Time,Size,SavedTime,SavedTimePercentage");
 
-    public void WriteResultsToCSV(int[] sizes, string[] compressors, int numberOfQueries)
+            // Loop through the sizes
+            for (int s = 0; s < sizes.Length; s++)
+            {
+                // Loop through the compressors
+                for (int c = 0; c < compressors.Length; c++)
+                {
+                    // Loop through the queries
+                    for (int q = 0; q < numberOfQueries; q++)
+                    {
+                        string size = sizes[s].ToString();
+                        string compression = compressors[c];
+                        string time = times[s, c, q].ToString();
+                        string sizeInBytes = sizesInBytes[s, c, q].ToString();
+                        double savedTime = times[s, 0, q] - times[s, c, q];
+                        string savedTimeStr = savedTime.ToString();
+                        double savedTimePercentage = (times[s, 0, q] != 0) ? (savedTime / times[s, 0, q]) * 100 : 0; // avoid division by zero
+                        string savedTimePercentageStr = savedTimePercentage.ToString("F2"); // 2 decimal places
+
+                        // Write row
+                        writer.WriteLine($"{size},{compression},{q + 1},{time},{sizeInBytes},{savedTimeStr},{savedTimePercentageStr}");
+                    }
+                }
+            }
+        }
+    }
+
+
+
+    /*public void WriteResultsToCSV(int[] sizes, string[] compressors, int numberOfQueries)
     {
         using (StreamWriter file = new StreamWriter("results.csv"))
         {
@@ -232,5 +267,5 @@ public class TestQueries
         line.Append($"{totalSize}");
 
         return line;
-    }
+    }*/
 }

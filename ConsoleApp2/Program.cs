@@ -48,7 +48,7 @@ public class Program
             }
         }
         
-        test.WriteResultsToCSV(sizes, compressors, numberOfQueries);
+        test.WriteResultsToCSV("result.csv", sizes, compressors, numberOfQueries);
 
     }
 }
