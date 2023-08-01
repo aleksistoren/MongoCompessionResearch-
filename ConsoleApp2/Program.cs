@@ -12,7 +12,7 @@ public class Program
     public static void Main(string[] args)
     {
         string[] compressors = {"none", "snappy", "zlib", "zstd"};
-        int[] sizes = {100, 1000, 2000, 5000, 10000}; // Insert sizes
+        int[] sizes = {100, 1000, 2000, 5000, 10000, 50000, 100000, 1000000}; // Insert sizes
         int numberOfQueries = 9;
 
         // Change this to your MongoDB host
